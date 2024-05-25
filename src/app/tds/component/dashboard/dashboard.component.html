@@ -1,0 +1,25 @@
+<h6 class="mt-2 pb-2 border-bottom"><b><i class="uil uil-multiply" style="cursor: pointer;"></i> My Dashboard</b></h6>
+<div class="col-md-12">
+    <div class="row" align="right">
+        <div class="col-md-8"></div>
+        <div class="col-md-2"></div>
+        <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+            <select name="" id="" class="form-select me-2 select-cloud">
+                <option *ngFor="let option of options" [value]="option.value">
+                    {{ option.label }}
+                </option>
+            </select>
+            <button class="btn btn-fent-cloud" (click)="onClickNewDeductor()"><i class="uil uil-plus"></i> New
+                Deductor</button>
+        </div>
+    </div>
+</div>
+<app-data-grid class="ag-theme-alpine" #declaredGrid [tableData]="data" [tableColumns]="declaredTableColumns"
+    [actionColumns]="declaredActionColumns" [isEditable]="false" [isSortable]="true"
+    [isFilterable]="false" [isColumnFilterable]="false" [isResizable]="false" [isPageable]="true" [defaultPageSize]="12"
+    (selectedRows)="selectEmployee($event)" (rowAction)="onRowAction($event)" (actionButton)="onActionButton($event)" (onRowClick)="onRowClicked($event)">
+</app-data-grid>
+<div class="col-12 px-2 py-0" style="position: fixed; bottom: 0;">
+    <span style="vertical-align: sub;font-size: 16px; font-weight: 600;">Powerd By</span> <img
+        src="assets/images/cloudstine/cloudstine_b.png" height="30" alt="">
+</div>

@@ -1,0 +1,121 @@
+<h6 class="mt-2 pb-2 border-bottom"><b><a href="/tds/dashboard"><i class="uil uil-multiply"
+        style="color: black;"></i></a> TDS Return Dashboard</b></h6>
+<div class="col-md-12">
+  <div class="row" align="right">
+    <div class="col-md-8"></div>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-12" style="display: flex; justify-content: flex-end;">
+      <select name="" id="" class="form-select me-2 select-cloud">
+        <option *ngFor="let financialyear of financialYearList" [value]="financialyear.value">
+          {{ financialyear.label }}
+        </option>
+      </select>
+      <button class="btn btn-fent-cloud" (click)="onClickNewReturn()"><i class="uil uil-plus"></i> New Return</button>
+    </div>
+  </div>
+</div>
+<!-- ag-grid -->
+<app-data-grid class="ag-theme-alpine" #declaredGrid [tableData]="tdsReturnList" [tableColumns]="declaredTableColumns"
+  [isEditable]="false" [isSortable]="true" [isFilterable]="false" [isColumnFilterable]="false" [isResizable]="false"
+  [isPageable]="true" [defaultPageSize]="12" (selectedRows)="selectEmployee($event)" (rowAction)="onRowAction($event)">
+</app-data-grid>
+<!-- end of ag-grid -->
+<!-- Buttons -->
+<div class="row mb-3 mt-4">
+  <div class="col-12 mx-2 " align="left">
+    <a type="button" class="btn btn-cloud" href="/tds/dashboard">Dashboard</a>&nbsp;&nbsp;
+    <a type="button" class="btn btn-cloud" href="/tds/dashboard">Lock Return</a>&nbsp;&nbsp;
+  </div>
+</div>
+<!-- end of button -->
+
+<!-- model -->
+<button type="button" id="newreturnmodel" style="display: none;" class="btn btn-primary" data-bs-toggle="modal"
+  data-bs-target="#exampleModal3">
+  Launch demo modal
+</button>
+
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none; background-color:  #9938A5; color: white !important;">
+        <h4 class="modal-title " id="exampleModalLabel3">New Return</h4>
+        <a type="button" class="btn-close" id="closemodal2" data-bs-dismiss="modal" aria-label="Close"></a>
+      </div>
+      <!-- Add formSubmitted boolean variable -->
+      <div class="modal-body p-5" id="modalMessage">
+        <!-- new return form start -->
+        <form #newreturn="ngForm" (ngSubmit)="OnSaveClick(newreturn)" #newRetuenForm="ngForm">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="form-group col-md-6" [ngClass]="{'has-error': (formSubmitted && isFinancialYearInvalid)}">
+                <label class="control-label">Financial Year*</label>
+                <select name="FYAYId" id="FYAYId" class="form-select me-2" [(ngModel)]="formData.FYAYId" required
+                  #financialYear="ngModel">
+                  <option value="" disabled selected>Select Financial Year</option>
+                  <option *ngFor="let financialyear of financialYearList" [value]="financialyear.value">
+                    {{ financialyear.label }}
+                  </option>
+                </select>
+               
+                <div *ngIf="(formSubmitted && !formData.FYAYId)" class="text-danger">Financial Year is required.</div>
+              </div>
+              
+              <div class="form-group col-md-6" [ngClass]="{'has-error': (formSubmitted && !formData.ReturnTypeId && (returnType.touched || returnType.dirty))}">
+                <label class="control-label">Return Type*</label>
+                <select name="ReturnTypeId" id="ReturnTypeId" class="form-select me-2" [(ngModel)]="formData.ReturnTypeId" required #returnType="ngModel" select Return Type>
+                  <option value="" disabled selected>Select Return Type</option>
+                  <option *ngFor="let returnType of returnTypeList" [value]="returnType.value">{{ returnType.label }}</option>
+                </select>
+                
+                <div *ngIf="(formSubmitted && !formData.ReturnTypeId)" class="text-danger">Return Type is required.</div>
+              </div>
+              
+
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6"
+                [ngClass]="{'has-error': (formSubmitted && !formData.QuarterId && (quarter.touched || quarter.dirty))}">
+                <label class="control-label">Quarter*</label>
+                <!-- <select name="QuarterId" id="QuarterId" class="form-select me-2" [(ngModel)]="formData.QuarterId"
+                  required #quarter="ngModel" placeholder="Enter ">
+                  <option value="" disabled selected>Select Quarter</option>
+                  <option *ngFor="let quarterType of quarterTypeList" [value]="quarterType.value">
+                    {{ quarterType.label }}
+                  </option>
+                </select> -->
+                <select name="QuarterId" id="QuarterId" class="form-select me-2" [(ngModel)]="formData.QuarterId"
+                required #quarter="ngModel" placeholder="Select Quarter">
+                <option value="" disabled selected>Select Quarter</option>
+                <option *ngFor="let quarterType of quarterTypeList" [value]="quarterType.value">
+                    {{ quarterType.label }}
+                </option>
+            </select>
+              
+                <div *ngIf="(formSubmitted && !formData.QuarterId)" class="text-danger">Quarter is required.</div>
+              </div>
+              <div class="form-group col-md-6"
+                [ngClass]="{'has-error': (formSubmitted && !formData.StatementTypeId && (statementType.touched || statementType.dirty))}">
+                <label class="control-label">Statement Type*</label>
+                <select name="StatementTypeId" id="StatementTypeId" class="form-select me-2"
+                  [(ngModel)]="formData.StatementTypeId" required #statementType="ngModel">
+                  <option value="" disabled selected>Select Statement Type</option>
+                  <option *ngFor="let statementType of statementTypeList" [value]="statementType.value">
+                    {{ statementType.label }}
+                  </option>
+                </select>
+              
+                <div *ngIf="(formSubmitted && !formData.StatementTypeId)" class="text-danger">Statement Type is
+                  required.</div>
+              </div>
+            </div>
+            <br>
+            <div class="text-center">
+              
+              <button type="submit" class="btn" style="border: none; background-color:  #9938A5; color: white;"
+                (click)="formSubmitted = true;">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
